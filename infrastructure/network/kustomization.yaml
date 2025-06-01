@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - cilium-bgp-auth-secret.yaml
   - cilium-bgp.yaml
+  - cilium-loadbalancer.yaml
