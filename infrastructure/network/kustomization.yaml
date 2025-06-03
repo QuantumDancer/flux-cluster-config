@@ -4,3 +4,5 @@ resources:
   - cilium-bgp-auth-secret.yaml
   - cilium-bgp.yaml
   - cilium-loadbalancer.yaml
+  - gateway-namespace.yaml
+  - gateway.yaml
