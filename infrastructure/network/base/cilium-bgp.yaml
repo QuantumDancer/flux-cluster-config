@@ -6,15 +6,17 @@ metadata:
 spec:
   nodeSelector:
     matchLabels:
-      topology.kubernetes.io/region: talos-prod
-      topology.kubernetes.io/zone: proxmox-01
+      topology.kubernetes.io/region: "${CLUSTER_NAME}-${CLUSTER_ENV}"
+      topology.kubernetes.io/zone: "${CLUSTER_ZONE}"
   bgpInstances:
-    - name: "instance-64513"
-      localASN: 64513
+    - name: "instance-${BGP_LOCAL_ASN}"
+      # replaced by patch in overlay
+      localASN: 0
       peers:
-        - name: "peer-64513-proxmox-01-prod"
-          peerASN: 64512
-          peerAddress: "192.168.30.1"
+        - name: "peer-${BGP_LOCAL_ASN}-${CLUSTER_ZONE}-${CLUSTER_ENV}"
+          # replaced by patch in overlay
+          peerASN: 0
+          peerAddress: "${BGP_PEER_ADDRESS}"
           peerConfigRef:
             name: "cilium-peer"
 ---

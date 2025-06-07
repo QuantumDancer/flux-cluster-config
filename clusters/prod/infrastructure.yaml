@@ -47,6 +47,16 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/network
+  path: ./infrastructure/network/overlays/prod
   prune: true
   wait: true
+  postBuild:
+    substitute:
+      CLUSTER_ENV: "prod"
+      CLUSTER_NAME: "talos"
+      CLUSTER_ZONE: "proxmox-01"
+      BGP_PEER_ADDRESS: "192.168.30.1"
+      LB_POOL_START: "192.168.31.10"
+      LB_POOL_STOP: "192.168.31.250"
+      GW_EXTERNAL_IP: "192.168.31.10"
+      GW_INTERNAL_IP: "192.168.31.11"

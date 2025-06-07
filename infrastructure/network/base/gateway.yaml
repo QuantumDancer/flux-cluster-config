@@ -16,7 +16,7 @@ spec:
   gatewayClassName: cilium
   addresses:
     - type: IPAddress
-      value: 192.168.31.10
+      value: "${GW_EXTERNAL_IP}"
   listeners:
     - name: http
       port: 80
@@ -45,7 +45,7 @@ spec:
   gatewayClassName: cilium
   addresses:
     - type: IPAddress
-      value: 192.168.31.11
+      value: "${GW_INTERNAL_IP}"
   listeners:
     - name: https
       port: 443
