@@ -81,3 +81,4 @@ spec:
     substitute:
       ACME_EMAIL: "benjamin@rottler.io"
       ACME_SERVER: "https://acme-v02.api.letsencrypt.org/directory"
+      EXTERNAL_DOMAIN: "k8s.home.rottlr.de"

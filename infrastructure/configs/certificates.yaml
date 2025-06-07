@@ -1,0 +1,28 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: external-tls-cert
+  namespace: gateway
+spec:
+  secretName: external-tls-cert
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  dnsNames:
+    - "${EXTERNAL_DOMAIN}"
+    - "*.${EXTERNAL_DOMAIN}"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: internal-tls-cert
+  namespace: gateway
+spec:
+  secretName: internal-tls-cert
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  dnsNames:
+    - "${INTERNAL_DOMAIN}"
+    - "*.${INTERNAL_DOMAIN}"
