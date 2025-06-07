@@ -59,7 +59,6 @@ spec:
       LB_POOL_START: "192.168.31.10"
       LB_POOL_STOP: "192.168.31.250"
       GW_EXTERNAL_IP: "192.168.31.10"
-      GW_INTERNAL_IP: "192.168.31.11"
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
