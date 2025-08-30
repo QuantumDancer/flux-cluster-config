@@ -142,3 +142,98 @@ spec:
             port: 9411
             targetPort: 9411
             protocol: TCP
+
+    # Metric tuning to reduce cardinality and stay within free tier limits
+    metrics:
+      # Configure cAdvisor metrics (container metrics)
+      cadvisor:
+        metricsTuning:
+          useDefaultAllowList: true
+          excludeMetrics:
+            # Drop unused container filesystem metrics (saves ~400 series)
+            - "container_fs_(reads_bytes_total|reads_total|writes_bytes_total|writes_total)"
+            # Drop unused derived node metrics (saves ~200 series)
+            - node_namespace_pod_container:container_(cpu_usage_seconds_total:sum_rate5m|memory_(cache|rss|swap))
+            - cluster:namespace:pod_(cpu|memory):active:kube_pod_container_resource_requests
+            # Drop network metrics for non-application containers
+            - 'container_network_.*container="POD"'
+            - container_network_.*pod="(coredns|cilium|sealed-secrets|cert-manager).*"
+          # Additional filtering via label dropping
+          dropEmptyContainerLabels: true
+          dropEmptyImageLabels: true
+
+      # Configure kube-state-metrics
+      kube-state-metrics:
+        metricsTuning:
+          useDefaultAllowList: true
+          excludeMetrics:
+            # Drop unused kube-state metrics
+            - "kube_pod_status_reason"
+            - "kube_replicaset_status_(fully_labeled_replicas|observed_generation|replicas)"
+            - "kube_replicaset_(created|metadata_generation)"
+            - "kube_pod_container_status_last_terminated_reason"
+            - "kube_pod_start_time"
+            - "kube_secret_metadata_resource_version"
+            - "kube_configmap_(info|metadata_resource_version)"
+
+      # Configure node-exporter metrics
+      node-exporter:
+        metricsTuning:
+          useDefaultAllowList: true
+          excludeMetrics:
+            # Drop high-cardinality node metrics we don't need
+            - "node_filesystem_mount_info"
+            # Drop network metrics for non-physical devices
+            - node_network_(receive|transmit)_.*_total.*device="(lo|docker|veth|br-|cni).*"
+            # Drop unused network info metrics
+            - 'node_network_info.*device="(lo|docker|veth|br-|cni).*"'
+            - 'node_network_mtu_bytes.*device="(lo|docker|veth|br-|cni).*"'
+            # Drop non-essential softnet metrics (keep essential ones)
+            - "node_softnet_(dropped|times_squeezed)_total"
+
+      # Configure kubelet metrics
+      kubelet:
+        metricsTuning:
+          useDefaultAllowList: true
+          excludeMetrics:
+            # Drop unused kubelet metrics
+            - "kubelet_cgroup_manager_duration_seconds_bucket"
+            - "storage_operation_duration_seconds_count"
+            - "kubelet_pod_start_duration_seconds_bucket"
+            - "kubelet_runtime_operations_total"
+            - "volume_manager_total_volumes"
+
+      # Add extra global metric relabeling rules for additional filtering
+      extraMetricRelabelingRules: |
+        # Drop prometheus target metrics we don't need
+        rule {
+          source_labels = ["__name__"]
+          regex = "prometheus_target_interval_length_seconds"
+          action = "drop"
+        }
+        # Drop workqueue metrics
+        rule {
+          source_labels = ["__name__"]
+          regex = workqueue_(queue_duration_seconds_bucket|work_duration_seconds_bucket)
+          action = "drop"
+        }
+        # Drop controller runtime metrics
+        rule {
+          source_labels = ["__name__"]
+          regex = "controller_runtime_reconcile_time_seconds_bucket"
+          action = "drop"
+        }
+        # Drop high-cardinality HAProxy metrics for unused servers
+        rule {
+          source_labels = ["__name__", "server"]
+          regex = "haproxy_server_status;(MAINT|DOWN).*"
+          action = "drop"
+        }
+
+      # Configure Alloy metrics with reduced histogram buckets
+      alloy:
+        metricsTuning:
+          useDefaultAllowList: true
+          excludeMetrics:
+            # Reduce Alloy histogram buckets by excluding high percentiles
+            - 'alloy_component_(dependencies_wait|evaluation)_seconds_bucket.*le="(10|25|50).*"'
