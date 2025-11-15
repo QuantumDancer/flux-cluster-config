@@ -11,7 +11,7 @@ spec:
     branch: main
   secretRef:
     name: flux-system
-  url: ssh://git@gitlab.home.rottlr.de/homelab/flux-cluster-config.git
+  url: ssh://git@gitlab.home.rottlr.de:2222/homelab/flux-cluster-config.git
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
