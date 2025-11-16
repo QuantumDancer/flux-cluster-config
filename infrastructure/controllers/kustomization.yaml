@@ -5,6 +5,5 @@ resources:
   - cert-manager.yaml
   - external-dns.yaml
   - longhorn.yaml
-  - kyverno.yaml
   - weave-gitops.yaml
   - weave-gitops-secret.yaml
