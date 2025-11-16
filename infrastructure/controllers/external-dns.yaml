@@ -56,3 +56,10 @@ spec:
           secretKeyRef:
             name: cloudflare-api-token
             key: apiToken
+    # Resource optimization based on KRR recommendations
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        memory: 128Mi

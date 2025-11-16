@@ -36,3 +36,24 @@ spec:
       enabled: true
       podmonitor:
         enabled: true
+    # Resource optimization based on KRR recommendations
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        memory: 128Mi
+    webhook:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          memory: 128Mi
+    cainjector:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          memory: 128Mi

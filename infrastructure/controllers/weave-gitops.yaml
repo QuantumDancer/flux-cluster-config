@@ -45,6 +45,13 @@ spec:
       createSecret: false
       existingSecret: gitops-admin-password
       username: admin
+    # Resource optimization based on KRR recommendations
+    resources:
+      requests:
+        cpu: 25m
+        memory: 128Mi
+      limits:
+        memory: 128Mi
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
