@@ -60,28 +60,28 @@ spec:
       LB_POOL_STOP: "192.168.31.250"
       GW_EXTERNAL_IP: "192.168.31.10"
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: infra-configs
-  namespace: flux-system
-spec:
-  dependsOn:
-    - name: infra-controllers
-  interval: 1h
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infrastructure/configs
-  prune: true
-  postBuild:
-    substitute:
-      ACME_EMAIL: "benjamin@rottler.io"
-      ACME_SERVER: "https://acme-v02.api.letsencrypt.org/directory"
-      EXTERNAL_DOMAIN: "k8s.home.rottlr.de"
----
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: infra-configs
+#   namespace: flux-system
+# spec:
+#   dependsOn:
+#     - name: infra-controllers
+#   interval: 1h
+#   retryInterval: 1m
+#   timeout: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./infrastructure/configs
+#   prune: true
+#   postBuild:
+#     substitute:
+#       ACME_EMAIL: "benjamin@rottler.io"
+#       ACME_SERVER: "https://acme-v02.api.letsencrypt.org/directory"
+#       EXTERNAL_DOMAIN: "k8s.home.rottlr.de"
+# ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
 # metadata:
